@@ -78,7 +78,7 @@ const CATALOG = [
    - After deploying backend to Render.com:
      change to 'https://your-app.onrender.com/order'
    ─────────────────────────────────────────────────────────── */
-const ORDER_ENDPOINT = 'http://185.98.7.92:8000/order';
+const ORDER_ENDPOINT = 'http://ouyla.duckdns.org:8000/order';
 
 /* ────────────────────────────────────────────────────────────
    SELECTION STATE
