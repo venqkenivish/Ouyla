@@ -18,38 +18,40 @@ const CATALOG = [
     desc: 'Екі худи. Сіздің өлшемдеріңіз бойынша бірдей баспа. Жұптарға арналған жиынтық.',
     badge: 'New drop',
     type: 'paired',
-    image: 'img/hoodie-main.jpg',
-    basePrice: 36000,
+    image: 'img/hoodie-paired.jpg',
+    basePrice: 34000,
     extraColorPrice: 2000,
     includedColors: 2,
     sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
     colors: [
-      { id: 'stone',   label: 'Stone',   hex: '#9E9E8F' },
-      { id: 'chalk',   label: 'Chalk',   hex: '#E8E4DC' },
-      { id: 'ash',     label: 'Ash',     hex: '#5A5A5A' },
-      { id: 'onyx',    label: 'Onyx',    hex: '#1A1A1A' },
-      { id: 'clay',    label: 'Clay',    hex: '#B87B60' },
-      { id: 'dusk',    label: 'Dusk',    hex: '#4A5568' },
+      { id: 'orange',   label: 'Қызыл-сары',   hex: '#FF7034' },
+      { id: 'white',   label:  'Жұмсақ ақ',   hex: '#E8E4DC' },
+      { id: 'coral',     label: 'Қызыл',     hex: '#f44839' },
+      { id: 'green',    label: 'Жасыл',    hex: '#108010' },
+      { id: 'pink',    label: 'Қызғылт',    hex: '#FF8DA1' },
+      { id: 'lightblue',    label: 'Көгілдір',    hex: '#90D5FF' },
+      { id: 'Lavender',    label: 'Лаванда',    hex: '#CB94F7' },
     ],
   },
   {
     id: 'single - hoodie',
     name: 'Жалғыз худи',
     desc: 'Өз өзін худи жасауға жалғыз худи.',
-    badge: 'new drop',
+    badge: 'New drop',
     type: 'single',
-    image: 'img/hoodie-main.jpg',
-    basePrice: 36000,
+    image: 'img/hoodie-single.jpg',
+    basePrice: 18000,
     extraColorPrice: 2000,
     includedColors: 2,
     sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
     colors: [
-      { id: 'stone',   label: 'Stone',   hex: '#9E9E8F' },
-      { id: 'chalk',   label: 'Chalk',   hex: '#E8E4DC' },
-      { id: 'ash',     label: 'Ash',     hex: '#5A5A5A' },
-      { id: 'onyx',    label: 'Onyx',    hex: '#1A1A1A' },
-      { id: 'clay',    label: 'Clay',    hex: '#B87B60' },
-      { id: 'dusk',    label: 'Dusk',    hex: '#4A5568' },
+      { id: 'orange',   label: 'Қызыл-сары',   hex: '#FF7034' },
+      { id: 'white',   label:  'Жұмсақ ақ',   hex: '#E8E4DC' },
+      { id: 'coral',     label: 'Қызыл',     hex: '#f44839' },
+      { id: 'green',    label: 'Жасыл',    hex: '#108010' },
+      { id: 'pink',    label: 'Қызғылт',    hex: '#FF8DA1' },
+      { id: 'lightblue',    label: 'Көгілдір',    hex: '#90D5FF' },
+      { id: 'Lavender',    label: 'Лаванда',    hex: '#CB94F7' },
     ],
   }
   /* ── Add more items by copying this block ──────────────────
@@ -309,8 +311,8 @@ function renderCart() {
 
   emptyEl.style.display = 'none';
   footerEl.classList.add('visible');
-  subtotal.textContent  = `$${totalAmt}`;
-  total.textContent     = `$${totalAmt}`;
+  subtotal.textContent  = `₸${totalAmt}`;
+  total.textContent     = `₸${totalAmt}`;
 
   itemsEl.innerHTML = cart.map(entry => {
     const details = [
@@ -326,7 +328,7 @@ function renderCart() {
           <div class="ci-details">${details}</div>
         </div>
         <div class="ci-right">
-          <div class="ci-price">$${entry.price * entry.qty}</div>
+          <div class="ci-price">₸${entry.price * entry.qty}</div>
           <div class="ci-controls">
             <button class="qty-btn" onclick="changeQty('${entry.key}', -1)">−</button>
             <span class="qty-val">${entry.qty}</span>
@@ -384,13 +386,13 @@ async function submitOrder() {
   const payload = {
     name,
     phone,
-    total: `$${cartTotal()}`,
+    total: `₸${cartTotal()}`,
     items: cart.map(e => ({
       name:   e.name,
       size1:  e.size1,
       size2:  e.size2 || null,
       colors: e.colorNames,
-      price:  `$${e.price}`,
+      price:  `₸${e.price}`,
       qty:    e.qty,
     })),
   };

@@ -401,6 +401,7 @@ body:has(button:hover) #cursor { width: 48px; height: 48px; border-color: var(--
 /* Colour swatches */
 .color-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .color-swatch {
+  min-width: 4rem;
   display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
   cursor: none; padding: 0.35rem 0.25rem;
   border: 1px solid transparent;
@@ -416,7 +417,7 @@ body:has(button:hover) #cursor { width: 48px; height: 48px; border-color: var(--
 .color-swatch:hover .swatch-blob,
 .color-swatch.active .swatch-blob { transform: scale(1.1); }
 .swatch-name {
-  font-family: var(--sans); font-size: 0.58rem; font-weight: 400;
+  font-family: var(--sans); font-size: 0.5rem; font-weight: 500;
   letter-spacing: 0.1em; color: var(--text-dim); text-align: center;
 }
 .color-swatch.active .swatch-name { color: var(--text-main); }
@@ -554,7 +555,7 @@ body:has(button:hover) #cursor { width: 48px; height: 48px; border-color: var(--
 }
 .ci-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; }
 .ci-price {
-  font-family: var(--serif); font-size: 1.1rem;
+  font-family: var(--sans);  font-size: 1.1rem;
   color: var(--text-add); white-space: nowrap;
 }
 .ci-controls { display: flex; align-items: center; gap: 0; }
