@@ -249,7 +249,7 @@ function refreshCard(itemId) {
       
       <div class="card-price" id="price-${item.id}">
         ₸${price}
-        
+      <span class="card-price-note">${isPaired ? 'жалпы құны' : 'жұп худидың құны'}</span>
       </div>
       ${extraPriceInfo}
       <div class="card-section">Бірінші өлшем</div>
@@ -261,7 +261,7 @@ function refreshCard(itemId) {
       ` : ''}
 
       <div class="card-section">Бояулар${isPaired ? 's' : ''}</div>
-      <span class="card-price-note">${isPaired ? 'жалпы құны' : 'жұп худидың құны'}</span>
+      
       <div class="color-row">${colorRow}</div>
       ${extraNote}
 
