@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-
+  <!-- cursor -->
   <div id="cursor"></div>
   <div id="cursor-dot"></div>
 
@@ -180,7 +180,7 @@
           </div>
         </div>
 
-        <div id="orderForm">
+        <div class = "order-form" id="orderForm" >
           <p class="form-heading">Байланыс мәліметтері</p>
           <div class="form-row">
             <label class="form-label" for="fName">Есіміңіз</label>
@@ -190,7 +190,10 @@
             <label class="form-label" for="fPhone">Телефон нөміріңіз</label>
             <input class="form-input" type="tel" id="fPhone" placeholder="+7 (777) 777 7777" autocomplete="tel"/>
           </div>
+          
           <button class="place-btn" id="placeOrderBtn">Тапсырыс орнату</button>
+          <a href="privacy.html" target="_blank">Дербес деректерді өңдеу және құпиялылық саясаты</a>
+          
         </div>
 
         <div class="order-success" id="orderSuccess"> 
@@ -212,10 +215,16 @@
       <div class="footer-bottom">
         <span>All orders fulfilled personally.</span>
         <span>Ouyla 2026</span>
+        <span> <a href="privacy.html" target="_blank">Құпиялылық саясаты</a> </span>
       </div>
     </div>
   </footer>
-
+  <!-- cookies -->
+  <div class="cookie-bar" id="cookieBar">
+  <p>Бізде басқа парақшалар сияқты cookie қолданамыз! </p>
+  <a href="privacy.html" target="_blank">Дербес деректерді өңдеу және құпиялылық саясаты</a>
+  <button class="cookie-btn" id="cookieAccept">Келісемің</button>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>

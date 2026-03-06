@@ -12,14 +12,16 @@
    type:  "paired" (two size pickers) | "single" (one size picker)
    ─────────────────────────────────────────────────────────── */
 const CATALOG = [
+  
   {
-    id: 'paired-hoodie',
-    name: 'Жұп худи',
-    desc: 'Екі худи. Сіздің өлшемдеріңіз бойынша бірдей баспа. Жұптарға арналған жиынтық.',
+    id: 'single - hoodie',
+    name: 'Жалғыз худи',
+    desc: 'Өз өзін худи жасауға жалғыз худи.',
     badge: 'New drop',
-    type: 'paired',
-    image: 'img/hoodie-paired.jpg',
-    basePrice: 34000,
+    type: 'single',
+    image: 'img/hoodie-single.jpg',
+    notSalePrice: 23000,
+    basePrice: 20000,
     extraColorPrice: 2000,
     includedColors: 2,
     sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
@@ -34,13 +36,14 @@ const CATALOG = [
     ],
   },
   {
-    id: 'single - hoodie',
-    name: 'Жалғыз худи',
-    desc: 'Өз өзін худи жасауға жалғыз худи.',
+    id: 'paired-hoodie',
+    name: 'Жұп худи',
+    desc: 'Екі худи. Сіздің өлшемдеріңіз бойынша бірдей баспа. Жұптарға арналған жиынтық.',
     badge: 'New drop',
-    type: 'single',
-    image: 'img/hoodie-single.jpg',
-    basePrice: 18000,
+    type: 'paired',
+    image: 'img/hoodie-paired.jpg',
+    notSalePrice: 42000,
+    basePrice: 40000,
     extraColorPrice: 2000,
     includedColors: 2,
     sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
@@ -53,7 +56,7 @@ const CATALOG = [
       { id: 'lightblue',    label: 'Көгілдір',    hex: '#90D5FF' },
       { id: 'Lavender',    label: 'Лаванда',    hex: '#CB94F7' },
     ],
-  }
+  },
   /* ── Add more items by copying this block ──────────────────
   {
     id: 'oversized-tee',
@@ -195,7 +198,6 @@ function refreshCard(itemId) {
 
   const isPaired = item.type === 'paired';
   const price    = calcPrice(item, sel.colors.length);
-
   /* Image */
   const imgHTML = `
     <div class="card-img">
@@ -233,18 +235,22 @@ function refreshCard(itemId) {
       <strong>${item.includedColors} бояу негізгі болып табылады</strong>.
       Тағы әр бояу <strong>+₸${item.extraColorPrice}</strong>.
     </p>` : '';
-
+  const extraPriceInfo = item.notSalePrice != undefined? `
+  <div class="card-notSalePrice" id="price-${item.notSalePrice}">
+        ₸${item.notSalePrice + price - item.basePrice}
+      </div>
+  ` : '';
   card.innerHTML = `
     ${imgHTML}
     <div class="card-body">
       <div class="card-name">${item.name}</div>
       <div class="card-desc">${item.desc}</div>
-
+      
       <div class="card-price" id="price-${item.id}">
         ₸${price}
         <span class="card-price-note">${isPaired ? 'жұп заттың құны' : 'әр зат құны'}</span>
       </div>
-
+      ${extraPriceInfo}
       <div class="card-section">Бірінші өлшем</div>
       <div class="size-row">${sizeRow('size1')}</div>
 
@@ -530,4 +536,16 @@ document.addEventListener('DOMContentLoaded', () => {
   initCursor();
   initReveal();
   initHeader();
+  // Cookie banner
+const cookieBar    = document.getElementById('cookieBar');
+const cookieAccept = document.getElementById('cookieAccept');
+
+if (!localStorage.getItem('ouyla_cookies_accepted')) {
+  setTimeout(() => cookieBar.classList.add('visible'), 1200);
+}
+
+cookieAccept.addEventListener('click', () => {
+  localStorage.setItem('ouyla_cookies_accepted', '1');
+  cookieBar.classList.remove('visible');
+});
 });

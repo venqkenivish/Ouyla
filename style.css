@@ -364,9 +364,15 @@ body:has(button:hover) #cursor { width: 48px; height: 48px; border-color: var(--
 }
 
 /* Price */
+.card-notSalePrice {
+  font-family: var(--sans); font-size: 1.5rem; font-weight: 150;
+  color: var(--text-main); margin-bottom: 1.4rem;
+  transition: color 0.2s;
+  text-decoration: line-through;
+}
 .card-price {
   font-family: var(--sans); font-size: 2rem; font-weight: 300;
-  color: var(--text-add); margin-bottom: 1.4rem;
+  color: var(--text-add); margin-bottom: 0.3rem;
   transition: color 0.2s;
 }
 .card-price-note {
@@ -639,7 +645,12 @@ body:has(button:hover) #cursor { width: 48px; height: 48px; border-color: var(--
 }
 .place-btn:hover { background: var(--text-add); }
 .place-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
+.order-form a{
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  margin-bottom: 1rem;
+  color: var(--text-dim);
+}
 /* Success */
 .order-success {
   display: none; text-align: center; padding: 1.5rem 0;
@@ -681,7 +692,62 @@ body:has(button:hover) #cursor { width: 48px; height: 48px; border-color: var(--
   font-family: var(--sans); font-size: 0.62rem; font-weight: 300;
   letter-spacing: 0.14em; color: var(--text-faint);
 }
-
+/* ═══════════════════════════════════════════════════
+   Cookies
+   ═══════════════════════════════════════════════════ */
+.cookie-bar {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 9000;
+  background: #0d0d0d;
+  border: 1px solid rgba(192,192,192,0.15);
+  padding: 1.2rem 1.5rem;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(120px);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.5s;
+  pointer-events: none;
+}
+.cookie-bar.visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+.cookie-bar p {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: var(--text-main);
+  line-height: 1.7;
+}
+.cookie-bar a{
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  margin-bottom: 1rem;
+  color: var(--text-dim);
+}
+.cookie-btn {
+  align-self: flex-start;
+  background: none;
+  border: 1px solid rgba(192,192,192,0.3);
+  color: var(--text-main);
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.5rem 1.1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.cookie-btn:hover {
+  border-color: var(--text-main);
+  color: var(--bg);
+  background: var(--text-main);
+}
 /* ═══════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════ */
@@ -700,8 +766,8 @@ body:has(button:hover) #cursor { width: 48px; height: 48px; border-color: var(--
   .header-left { display: none; }
 
   .hero { grid-template-columns: 1fr; min-height: unset; }
-  .hero-image-col { order: 1; }
-  .hero-photo-frame { height: 60vw; min-height: 260px; }
+  .hero-image-col { order: 1;}
+  .hero-photo-frame { height: 100vw; min-height: 260px; }
   .hero-text-col { order: 2; padding: 2.5rem 1.5rem 3rem; }
   .hero-headline { font-size: clamp(3rem, 10vw, 4.5rem); }
   .hero-aside { display: none; }
