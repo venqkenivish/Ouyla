@@ -21,8 +21,7 @@ const CATALOG = [
     type: 'single',
     images: [ 
       '../img/hoodie-single.jpg',
-      '../img/hoodie-paired.jpg',
-      '../img/no-image.png',
+      '../img/hoodie-single2.png',
     ],
     notSalePrice: 23000,
     basePrice: 20000,
@@ -46,8 +45,8 @@ const CATALOG = [
     badge: 'New drop',
     type: 'paired',
     images: [ 
-      '../img/hoodie-paired.jpg',
-      '../img/hoodie-single.jpg',
+      '../img/hoodie-paired1.png',
+      '../img/hoodie-paired2.png',
     ],
     notSalePrice: 42000,
     basePrice: 40000,
