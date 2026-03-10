@@ -19,7 +19,11 @@ const CATALOG = [
     desc: 'Өз өзін худи жасауға жалғыз худи.',
     badge: 'New drop',
     type: 'single',
-    image: 'img/hoodie-single.jpg',
+    images: [ 
+      '../img/hoodie-single.jpg',
+      '../img/hoodie-paired.jpg',
+      '../img/no-image.png',
+    ],
     notSalePrice: 23000,
     basePrice: 20000,
     extraColorPrice: 2000,
@@ -41,7 +45,10 @@ const CATALOG = [
     desc: 'Екі худи. Сіздің өлшемдеріңіз бойынша бірдей баспа. Жұптарға арналған жиынтық.',
     badge: 'New drop',
     type: 'paired',
-    image: 'img/hoodie-paired.jpg',
+    images: [ 
+      '../img/hoodie-paired.jpg',
+      '../img/hoodie-single.jpg',
+    ],
     notSalePrice: 42000,
     basePrice: 40000,
     extraColorPrice: 2000,
@@ -57,32 +64,11 @@ const CATALOG = [
       { id: 'Lavender',    label: 'Лаванда',    hex: '#CB94F7' },
     ],
   },
-  /* ── Add more items by copying this block ──────────────────
-  {
-    id: 'oversized-tee',
-    name: 'Oversized Tee',
-    desc: 'Drop-shoulder cut. Brushed cotton. Wears like a second skin.',
-    badge: 'New',
-    type: 'single',
-    image: 'img/tee-main.jpg',
-    basePrice: 22,
-    extraColorPrice: 0,
-    includedColors: 1,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: [
-      { id: 'chalk', label: 'Chalk', hex: '#E8E4DC' },
-      { id: 'onyx',  label: 'Onyx',  hex: '#1A1A1A' },
-    ],
-  },
-  ── ──────────────────────────────────────────────────────── */
+
 ];
 
-/* ────────────────────────────────────────────────────────────
-   BACKEND URL
-   - Local / Docker:      leave as '/order'
-   - After deploying backend to Render.com:
-     change to 'https://your-app.onrender.com/order'
-   ─────────────────────────────────────────────────────────── */
+
+/* ─── BACKEND URL ──────────────────────────────────────────────── */
 const ORDER_ENDPOINT = 'https://ouyla.duckdns.org/order';
 
 /* ────────────────────────────────────────────────────────────
@@ -101,11 +87,7 @@ function initSelection() {
   });
 }
 
-/* ────────────────────────────────────────────────────────────
-   CART STATE
-   Each cart entry is independent — same product can appear
-   multiple times with different options.
-   ─────────────────────────────────────────────────────────── */
+
 let cart = [];   // [{ key, itemId, name, size1, size2, colors, price, qty }]
 
 function cartKey(itemId, size1, size2, colors) {
@@ -125,7 +107,7 @@ function addToCart(itemId) {
   const colorNames = item.colors
     .filter(c => sel.colors.includes(c.id))
     .map(c => c.label).join(', ');
-
+  const thumb      = item.images && item.images[0] ? item.images[0] : null;
   const existing = cart.find(e => e.key === key);
   if (existing) {
     existing.qty++;
@@ -140,6 +122,7 @@ function addToCart(itemId) {
       colorNames,
       price,
       qty: 1,
+      thumb 
     });
   }
 
@@ -198,21 +181,36 @@ function refreshCard(itemId) {
 
   const isPaired = item.type === 'paired';
   const price    = calcPrice(item, sel.colors.length);
-  /* Image */
-  const imgHTML = `
-    <div class="card-img">
-      <img
-        src="${item.image}"
-        alt="${item.name}"
-        loading="lazy"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+  const imgs     = item.images && item.images.length ? item.images : ['../img/no-image.png'];
+  const slideIdx = sel.slide || 0;
+
+  /* ── Multi-image gallery ── */
+  const slides = imgs.map((src, i) => `
+    <div class="gallery-slide ${i == slideIdx ? 'active' : ''}" data-idx="${i}">
+      <img src="${src}" alt="${item.name}"
+           loading="lazy"
+           onclick="openLightbox('${item.id}',${slideIdx})"  
+           onerror="this.parentElement.classList.add('img-err')"
       />
-      <div class="card-img-placeholder" style="display:none">
-        <span>${item.image}</span>
-        <span>Add your photo</span>
-      </div>
-      ${item.badge ? `<div class="card-img-badge">${item.badge}</div>` : ''}
-    </div>`;
+    </div>`).join('');
+    
+  const dots = imgs.length > 1 ? imgs.map((_, i) =>
+    `<div class="gallery-dot ${i === slideIdx ? 'active' : ''}" onclick="event.stopPropagation();goSlide('${item.id}',${i})"></div>`
+  ).join('') : '';
+  const arrows = imgs.length > 1 ? `
+    <div class="gallery-nav">
+      <button class="gallery-arrow" onclick="event.stopPropagation();lbSlideCard('${item.id}',-1)">&#8249;</button>
+      <button class="gallery-arrow" onclick="event.stopPropagation();lbSlideCard('${item.id}',+1)">&#8250;</button>
+    </div>` : '';
+
+  const expandBtn = `
+    <button class="gallery-expand" onclick="event.stopPropagation();openLightbox('${item.id}',${slideIdx})" title="Expand">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <path d="M1 4V1h3M8 1h3v3M11 8v3H8M4 11H1V8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </button>`;
+
+  const badge = item.badge ? `<div class="card-img-badge">${item.badge}</div>` : '';
 
   /* Sizes */
   const sizeRow = (which) => item.sizes.map(sz => {
@@ -242,14 +240,18 @@ function refreshCard(itemId) {
   ` : '';
   /**/
   card.innerHTML = `
-    ${imgHTML}
+   <div class="card-gallery">
+      <div class="gallery-slides">${slides}</div>
+      ${badge}${expandBtn}${arrows}
+      <div class="gallery-dots">${dots}</div>
+    </div>
     <div class="card-body">
       <div class="card-name">${item.name}</div>
       <div class="card-desc">${item.desc}</div>
       
       <div class="card-price" id="price-${item.id}">
         ₸${price}
-      <span class="card-price-note">${isPaired ? 'жалпы құны' : 'жұп худидың құны'}</span>
+      <span class="card-price-note">${isPaired ?  'жұп худидың құны':'жалпы құны' }</span>
       </div>
       ${extraPriceInfo}
       <div class="card-section">Бірінші өлшем</div>
@@ -271,6 +273,18 @@ function refreshCard(itemId) {
     </div>`;
 }
 
+function goSlide(itemId, idx) {
+  const item = CATALOG.find(i => i.id === itemId);
+  const imgs = item.images || [];
+  selection[itemId].slide = (idx + imgs.length) % imgs.length;
+  refreshCard(itemId);
+}
+function lbSlideCard(itemId, dir) {
+  const item = CATALOG.find(i => i.id === itemId);
+  const imgs = item.images || [];
+  const cur  = selection[itemId].slide || 0;
+  goSlide(itemId, cur + dir);
+}
 function selectSize(itemId, which, size) {
   selection[itemId][which] = size;
   refreshCard(itemId);
@@ -281,8 +295,7 @@ function toggleColor(itemId, colorId) {
   const idx = sel.colors.indexOf(colorId);
   idx > -1 ? sel.colors.splice(idx, 1) : sel.colors.push(colorId);
   refreshCard(itemId);
-
-  /* Animate price */
+    /* Animate price */
   const priceEl = document.getElementById(`price-${itemId}`);
   if (priceEl) {
     priceEl.style.transition = 'none';
@@ -293,6 +306,44 @@ function toggleColor(itemId, colorId) {
     });
   }
 }
+/* ─── LIGHTBOX ─────────────────────────────────────────────────── */
+let lbImages = [];
+let lbIndex  = 0;
+
+function openLightbox(itemId, startIdx) {
+  const item = CATALOG.find(i => i.id === itemId);
+  lbImages = item.images && item.images.length ? item.images : ['../img/no-image.png'];
+  lbIndex  = startIdx || 0;
+  renderLightbox();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function lbStep(dir) {
+  lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
+  renderLightbox();
+}
+
+function renderLightbox() {
+  const img  = document.getElementById('lightboxImg');
+  const dots = document.getElementById('lightboxDots');
+  const prev = document.getElementById('lbPrev');
+  const next = document.getElementById('lbNext');
+  if (img)  img.src = lbImages[lbIndex];
+  if (prev) prev.style.display = lbImages.length > 1 ? '' : 'none';
+  if (next) next.style.display = lbImages.length > 1 ? '' : 'none';
+  if (dots) dots.innerHTML = lbImages.map((_, i) =>
+    `<div class="lb-dot ${i === lbIndex ? 'active' : ''}" onclick="lbIndex=${i};renderLightbox()"></div>`
+  ).join('');
+}
+
+
+
 
 /* ────────────────────────────────────────────────────────────
    RENDER CART
@@ -304,7 +355,7 @@ function renderCart() {
   const subtotal  = document.getElementById('cartSubtotal');
   const total     = document.getElementById('cartTotal');
   const countEl   = document.getElementById('cartCount');
-
+  if (!itemsEl) return;
   const totalQty  = cart.reduce((s, e) => s + e.qty, 0);
   const totalAmt  = cartTotal();
 
@@ -328,28 +379,36 @@ function renderCart() {
       entry.size2 ? `/ ${entry.size2}` : '',
       `— ${entry.colorNames}`,
     ].filter(Boolean).join(' ');
-
+    const thumbHTML = entry.thumb
+      ? `<img class="ci-thumb" src="${entry.thumb}" alt="${entry.name}"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+         <div class="ci-thumb-placeholder" style="display:none"></div>`
+      : `<div class="ci-thumb-placeholder"></div>`;
     return `
       <div class="cart-item">
-        <div class="ci-left">
-          <div class="ci-name">${entry.name}</div>
-          <div class="ci-details">${details}</div>
-        </div>
-        <div class="ci-right">
-          <div class="ci-price">₸${entry.price * entry.qty}</div>
-          <div class="ci-controls">
-            <button class="qty-btn" onclick="changeQty('${entry.key}', -1)">−</button>
-            <span class="qty-val">${entry.qty}</span>
-            <button class="qty-btn" onclick="changeQty('${entry.key}', +1)">+</button>
+          <div class="ci-left-thumb">
+            ${thumbHTML}
+            <div class="ci-left">
+              <div class="ci-name">${entry.name}</div>
+              <div class="ci-details">${details}</div>
+            </div>
           </div>
-          <button class="ci-remove" onclick="removeFromCart('${entry.key}')">Өшіру</button>
-        </div>
+        
+          <div class="ci-right">
+            <div class="ci-price">₸${entry.price * entry.qty}</div>
+            <div class="ci-controls">
+              <button class="qty-btn" onclick="changeQty('${entry.key}', -1)">−</button>
+              <span class="qty-val">${entry.qty}</span>
+              <button class="qty-btn" onclick="changeQty('${entry.key}', +1)">+</button>
+            </div>
+            <button class="ci-remove" onclick="removeFromCart('${entry.key}')">Өшіру</button>
+          </div>
+        
       </div>`;
   }).join('');
 
   /* Reset form / success visibility when cart updates */
-  document.getElementById('orderForm').style.display    = 'block';
-  document.getElementById('orderSuccess').classList.remove('visible');
+
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -374,10 +433,47 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('browseLink')?.addEventListener('click', closeCart);
   document.getElementById('placeOrderBtn').addEventListener('click', submitOrder);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
+
+  /* ── Confirm popup wiring ── */
+  document.getElementById('confirmOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('confirmOverlay')) closeConfirm();
+  });
+
+  /* ── Success popup wiring ── */
+  document.getElementById('successOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('successOverlay')) closeSuccess();
+  });
 });
 
 /* ────────────────────────────────────────────────────────────
+   CONFIRM POPUP
+   ─────────────────────────────────────────────────────────── */
+function openConfirm() {
+  const phone = document.getElementById('fPhone').value.trim();
+  document.getElementById('confirmPhone').textContent = phone;
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('open');
+}
+
+/* ────────────────────────────────────────────────────────────
+   SUCCESS POPUP
+   ─────────────────────────────────────────────────────────── */
+function openSuccess() {
+  document.getElementById('successOverlay').classList.add('open');
+}
+
+function closeSuccess() {
+  document.getElementById('successOverlay').classList.remove('open');
+  closeCart();
+}
+
+/* ────────────────────────────────────────────────────────────
    PLACE ORDER
+   submitOrder    → validates → opens confirm popup
+   confirmAndSend → user approved → sends → opens success popup
    ─────────────────────────────────────────────────────────── */
 async function submitOrder() {
   const name  = document.getElementById('fName').value.trim();
@@ -386,6 +482,15 @@ async function submitOrder() {
   if (!name)  { showToast('Аты-жөніңізді енгізіңіз'); return; }
   if (!phone) { showToast('Телефон нөміріңізді енгізіңіз'); return; }
   if (cart.length === 0) { showToast('Сіз тауар тандамадыңыз'); return; }
+
+  openConfirm();
+}
+
+async function confirmAndSend() {
+  closeConfirm();
+
+  const name  = document.getElementById('fName').value.trim();
+  const phone = document.getElementById('fPhone').value.trim();
 
   const btn = document.getElementById('placeOrderBtn');
   btn.disabled = true;
@@ -417,13 +522,11 @@ async function submitOrder() {
   }
 
   btn.disabled    = false;
-  btn.textContent = 'Place Order';
-
-  document.getElementById('orderForm').style.display = 'none';
-  document.getElementById('orderSuccess').classList.add('visible');
+  btn.textContent = 'Тапсырыс орнату';
 
   cart = [];
   renderCart();
+  openSuccess();
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -509,6 +612,12 @@ function initReveal() {
   targets.forEach(el => io.observe(el));
 }
 
+function initFooterAndEdi(){
+  document.getElementById("site-footer").innerHTML = '<div class="footer-inner"> <div class="footer-top"> <div class="footer-wordmark">Ouyla</div><div class="footer-tagline">Spring 2026 drop collection</div></div><div class="footer-rule"></div><div class="footer-bottom"><span>All orders fulfilled personally.</span><span>Ouyla 2026</span><span> <a href="privacy.html" target="_blank">Құпиялылық саясаты</a> </span></div></div>';
+  document.getElementById("howToUse1").innerHTML = '1)	Бояуды жағу: Жұмысты бастамас бұрын бояуды жақсылап араластырып алыңыз. Бояуды қылқаламмен жұқа әрі тегіс қабат етіп жағыңыз.';
+  document.getElementById("howToUse2").innerHTML ='2)	Кептіру және бекіту: Дайын суретті 24 сағат бойы кептіріңіз. Содан кейін мақта мата арқылы бусыз үтікпен 10 минут бойы үтіктеңіз (мақта матаға арналған температурада). Үтіктеу барысында суретке «демалуға» мүмкіндік беріп, арасында үзіліс жасап тұрыңыз.';
+  document.getElementById("howToUse3").innerHTML ='3)	Күтім көрсету: Үтіктегеннен кейін 48 сағат өткен соң бұйымды жууға болады. Жұмсақ жуғыш заттарды қолданып, 30°C-тан 40°C-қа дейінгі температурада, қатты механикалық күш салмай (нәзік жуу режимінде) жуыңыз.';
+}
 /* ────────────────────────────────────────────────────────────
    HEADER SCROLL BEHAVIOUR
    ─────────────────────────────────────────────────────────── */
@@ -538,6 +647,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCursor();
   initReveal();
   initHeader();
+  initFooterAndEdi();
   // Cookie banner
 const cookieBar    = document.getElementById('cookieBar');
 const cookieAccept = document.getElementById('cookieAccept');
