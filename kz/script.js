@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   OUYLA — script.js
+   OYULA — script.js
    Catalog data, cart state, rendering, interactions
    ═══════════════════════════════════════════════════════════ */
 
@@ -613,7 +613,7 @@ function initReveal() {
 }
 
 function initFooterAndEdi(){
-  document.getElementById("site-footer").innerHTML = '<div class="footer-inner"> <div class="footer-top"> <div class="footer-wordmark">Ouyla</div><div class="footer-tagline">Spring 2026 drop collection</div></div><div class="footer-rule"></div><div class="footer-bottom"><span>All orders fulfilled personally.</span><span>Ouyla 2026</span><span> <a href="privacy.html" target="_blank">Құпиялылық саясаты</a> </span></div></div>';
+  document.getElementById("site-footer").innerHTML = '<div class="footer-inner"> <div class="footer-top"> <div class="footer-wordmark">oyula</div><div class="footer-tagline">Spring 2026 drop collection</div></div><div class="footer-rule"></div><div class="footer-bottom"><span>All orders fulfilled personally.</span><span>oyula 2026</span><span> <a href="privacy.html" target="_blank">Құпиялылық саясаты</a> </span></div></div>';
   document.getElementById("howToUse1").innerHTML = '1)	Бояуды жағу: Жұмысты бастамас бұрын бояуды жақсылап араластырып алыңыз. Бояуды қылқаламмен жұқа әрі тегіс қабат етіп жағыңыз.';
   document.getElementById("howToUse2").innerHTML ='2)	Кептіру және бекіту: Дайын суретті 24 сағат бойы кептіріңіз. Содан кейін мақта мата арқылы бусыз үтікпен 10 минут бойы үтіктеңіз (мақта матаға арналған температурада). Үтіктеу барысында суретке «демалуға» мүмкіндік беріп, арасында үзіліс жасап тұрыңыз.';
   document.getElementById("howToUse3").innerHTML ='3)	Күтім көрсету: Үтіктегеннен кейін 48 сағат өткен соң бұйымды жууға болады. Жұмсақ жуғыш заттарды қолданып, 30°C-тан 40°C-қа дейінгі температурада, қатты механикалық күш салмай (нәзік жуу режимінде) жуыңыз.';
