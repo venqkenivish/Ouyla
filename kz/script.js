@@ -20,7 +20,7 @@ const CATALOG = [
     badge: 'New drop',
     type: 'single',
     images: [ 
-      '../img/hoodie-single.jpg',
+      '../img/hoodie-single1.png',
       '../img/hoodie-single2.png',
     ],
     notSalePrice: 23000,
