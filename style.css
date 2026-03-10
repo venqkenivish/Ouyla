@@ -338,7 +338,7 @@ body:has(button:hover) #cursor { width: 48px; height: 48px; border-color: var(--
 .gallery-slide.active { opacity: 1; }
 .gallery-slide img {
   width: 100%; height: 100%;
-  object-fit: cover; object-position: center top;
+  object-fit: cover; object-position: center;
   filter: brightness(0.85) contrast(1.05);
   transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
 }
@@ -997,7 +997,7 @@ body:has(button:hover) #cursor { width: 48px; height: 48px; border-color: var(--
   .editorial-headline { font-size: 2rem; }
   .editorial-right,.editorial-left p { font-size: 0.78rem; }
   .editorial-photo-frame{height: 25vh;}
-  
+
   /* Lightbox */
   .lightbox-img-wrap { max-width: 96vw; max-height: 82vh; }
   .lightbox-img-wrap img { max-height: 82vh; }
